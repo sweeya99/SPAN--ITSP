@@ -1,0 +1,7 @@
+Execute everything mentioned below in different terminals
+
+roslaunch hitter_pole.launch to launch the model in an empty world
+
+roslaunch hitter_pole_control.launch to load in controllers 
+
+rostopic pub to /mybot/gripper_extension_controller to change extension of pole. (Max value is 0.3, Min value is 0.0)

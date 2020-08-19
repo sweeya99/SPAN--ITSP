@@ -1,0 +1,295 @@
+<?xml version='1.0'?>
+
+<robot name="myrobot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+
+  <!--xacro:include filename="$(find trial)/urdf/mybot.gazebo" /-->
+  <xacro:include filename="$(find MYROBOT_control)/urdf/materials.xacro" />
+  <xacro:include filename="$(find MYROBOT_control)/urdf/macros.xacro" />
+
+
+  <link name='chassis'>
+    <pose>0 0 0.005 0 0 0</pose>
+
+    <inertial>
+      <mass value="10.0"/>
+      <origin xyz="0 0 0.05" rpy=" 0 0 0"/>
+      <inertia
+          ixx="0.5" ixy="0" ixz="0"
+          iyy="1.0" iyz="0"
+          izz="0.1"
+      />
+    </inertial>
+
+    <collision name='collision'>
+      <origin xyz="0 0 0.05" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.3 0.3 0.1"/>
+      </geometry>
+    </collision>
+
+    <visual name='chassis_visual'>
+      <origin xyz="0 0 0.05" rpy=" 0 0 0"/>
+      <geometry>
+        <box size="0.3 0.3 0.1"/>
+      </geometry>
+    </visual>
+  </link>
+
+
+
+  <link name="left_wheel">
+    <!--origin xyz="0.1 0.13 0.1" rpy="0 1.5707 1.5707"/-->
+    <collision name="collision">
+      <origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
+      <geometry>
+        <cylinder radius="0.05" length="0.05"/>
+      </geometry>
+    </collision>
+    <visual name="left_wheel_visual">
+      <origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
+      <geometry>
+        <cylinder radius="0.05" length="0.05"/>
+      </geometry>
+    </visual>
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
+      <mass value="5"/>
+      <cylinder_inertia m="5" r="0.05" h="0.05"/>
+      <inertia
+        ixx="1.0" ixy="0.0" ixz="0.0"
+        iyy="1.0" iyz="0.0"
+        izz="1.0"/>
+    </inertial>
+  </link>
+
+  <transmission name="left_tran">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="left_wheel_hinge">
+        <!--hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface-->
+      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="left_motor">
+        <!--hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface-->
+      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <link name="left_back_wheel">
+    <!--origin xyz="0.1 0.13 0.1" rpy="0 1.5707 1.5707"/-->
+    <collision name="collision">
+      <origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
+      <geometry>
+        <cylinder radius="0.05" length="0.05"/>
+      </geometry>
+    </collision>
+    <visual name="left_wheel_visual">
+      <origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
+      <geometry>
+        <cylinder radius="0.05" length="0.05"/>
+      </geometry>
+    </visual>
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
+      <mass value="5"/>
+      <cylinder_inertia m="5" r="0.05" h="0.05"/>
+      <inertia
+        ixx="1.0" ixy="0.0" ixz="0.0"
+        iyy="1.0" iyz="0.0"
+        izz="1.0"/>
+    </inertial>
+  </link>
+
+  <link name="right_wheel">
+    <!--origin xyz="0.1 -0.13 0.1" rpy="0 1.5707 1.5707"/-->
+    <collision name="collision">
+      <origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
+      <geometry>
+        <cylinder radius="0.05" length="0.05"/>
+      </geometry>
+    </collision>
+    <visual name="right_wheel_visual">
+      <origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
+      <geometry>
+        <cylinder radius="0.05" length="0.05"/>
+      </geometry>
+    </visual>
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
+      <mass value="5"/>
+      <cylinder_inertia m="5" r="0.05" h="0.05"/>
+      <inertia
+        ixx="1.0" ixy="0.0" ixz="0.0"
+        iyy="1.0" iyz="0.0"
+        izz="1.0"/>
+    </inertial>
+  </link>
+
+  <transmission name="right_tran">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="right_wheel_hinge">
+        <!--hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface-->
+      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="left_motor">
+        <!--hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface-->
+      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <link name="right_back_wheel">
+    <!--origin xyz="0.1 -0.13 0.1" rpy="0 1.5707 1.5707"/-->
+    <collision name="collision">
+      <origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
+      <geometry>
+        <cylinder radius="0.05" length="0.05"/>
+      </geometry>
+    </collision>
+    <visual name="right_wheel_visual">
+      <origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
+      <geometry>
+        <cylinder radius="0.05" length="0.05"/>
+      </geometry>
+    </visual>
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
+      <mass value="5"/>
+      <cylinder_inertia m="5" r="0.05" h="0.05"/>
+      <inertia
+        ixx="1.0" ixy="0.0" ixz="0.0"
+        iyy="1.0" iyz="0.0"
+        izz="1.0"/>
+    </inertial>
+  </link>
+
+
+  <joint type="continuous" name="left_wheel_hinge">
+    <origin xyz="0.1 0.175 -0.01" rpy="0 0 0"/>
+    <child link="left_wheel"/>
+    <parent link="chassis"/>
+    <axis xyz="0 1 0" rpy="0 0 0"/>
+    <limit effort="100" velocity="100"/>
+    <joint_properties damping="0.0" friction="0.0"/>
+  </joint>
+
+  <joint type="continuous" name="left_back_wheel_hinge">
+    <origin xyz="-0.1 0.175 -0.01" rpy="0 0 0"/>
+    <child link="left_back_wheel"/>
+    <parent link="chassis"/>
+    <axis xyz="0 1 0" rpy="0 0 0"/>
+    <limit effort="100" velocity="100"/>
+    <joint_properties damping="0.0" friction="0.0"/>
+  </joint>
+
+  <joint type="continuous" name="right_wheel_hinge">
+    <origin xyz="0.1 -0.175 -0.01" rpy="0 0 0"/>
+    <child link="right_wheel"/>
+    <parent link="chassis"/>
+    <axis xyz="0 1 0" rpy="0 0 0"/>
+    <limit effort="100" velocity="100"/>
+    <joint_properties damping="0.0" friction="0.0"/>
+  </joint>
+
+  <joint type="continuous" name="right_back_wheel_hinge">
+    <origin xyz="-0.1 -0.175 -0.01" rpy="0 0 0"/>
+    <child link="right_back_wheel"/>
+    <parent link="chassis"/>
+    <axis xyz="0 1 0" rpy="0 0 0"/>
+    <limit effort="100" velocity="100"/>
+    <joint_properties damping="0.0" friction="0.0"/>
+  </joint>
+
+  <link name="gripper_pole">
+    <visual>
+      <material name="white"/>
+      <geometry>
+        <cylinder length="0.5" radius="0.01"/>
+      </geometry>
+      <origin rpy="1.57075 0 1.57075 " xyz="0.1 0 0"/>
+    </visual>
+
+    <inertial>
+      <mass value="10.0"/>
+      <origin xyz="0 0 0.1" rpy=" 0 0 0"/>
+      <inertia
+          ixx="0.5" ixy="0" ixz="0"
+          iyy="1.0" iyz="0"
+          izz="0.1"
+      />
+    </inertial>
+
+    <collision name='collision'>
+      <origin xyz="0.1 0 0" rpy="0 1.57075 0"/>     
+      <geometry>
+        <cylinder length="0.5" radius="0.01"/>
+      </geometry>
+    </collision>
+
+    <surface>
+     <bounce>
+        <restitution_coefficient>1</restitution_coefficient>
+        <threshold>0</threshold>
+      </bounce>
+      <contact>
+        <ode>
+          <max_vel>10</max_vel>
+        </ode>
+      </contact>
+    </surface>
+  </link>
+
+  <joint name="gripper_extension" type="prismatic">
+    <parent link="chassis"/>
+    <child link="gripper_pole"/>
+    <axis xyz="1 0 0"/>
+    <limit effort="1000.0" lower="0.0" upper="0.3" velocity="8.5"/>
+    <origin rpy="0 0 0" xyz="0 0 -0.03"/>
+  </joint>
+
+  <transmission name="gripper_extension_trans" type="SimpleTransmission">
+    <type>transmission_interface/SimpleTransmission</type>
+    <actuator name="gripper_extension_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+    <joint name="gripper_extension">
+      <hardwareInterface>PositionJointInterface</hardwareInterface>
+    </joint>
+  </transmission>
+
+
+  <gazebo>
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+      <robotNamespace>/mybot</robotNamespace>
+      <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
+      <legacyModeNS>true</legacyModeNS>
+    </plugin>
+  </gazebo>
+
+  <gazebo>
+    <plugin name="differential_drive_controller" filename="libgazebo_ros_diff_drive.so">
+      <legacyMode>false</legacyMode>
+      <alwaysOn>true</alwaysOn>
+      <updateRate>20</updateRate>
+      <leftJoint>left_wheel_hinge</leftJoint>
+      <rightJoint>right_wheel_hinge</rightJoint>
+      <wheelSeparation>0.035</wheelSeparation>
+      <wheelDiameter>0.01</wheelDiameter>
+      <torque>20</torque>
+      <commandTopic>cmd_vel</commandTopic>
+      <odometryTopic>odom</odometryTopic>
+      <odometryFrame>odom</odometryFrame>
+      <robotBaseFrame>chassis</robotBaseFrame>
+    </plugin>
+  </gazebo>
+
+
+  <gazebo reference="chassis">
+      <material>Gazebo/Orange</material>
+    </gazebo>
+
+
+
+
+</robot>
