@@ -1,0 +1,243 @@
+<?xml version="1.0"?>
+<robot name="roscontrol" xmlns:xacro="http://ros.org/wiki/xacro">
+
+    <xacro:property name="wheeldiam" value="0.20" />
+    <xacro:property name="bodylen" value="0.6" />
+    <xacro:property name="pi" value="3.1415" />
+    <xacro:property name="baselen" value="0.4" />
+
+    <material name="blue">
+     <color rgba="0 0 0.8 1"/>
+    </material>
+
+    <material name="white">
+        <color rgba="1 1 1 1"/>
+    </material>
+    
+    <material name="black">
+      <color rgba="0 0 0 1"/>
+    </material>
+
+
+    <xacro:macro name="default_inertial" params="mass">
+      <inertial>
+       <mass value="${mass}" />
+       <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0" />
+      </inertial>
+    </xacro:macro>
+
+  <link name="base_link">
+
+    <!--pose>0 0 0.001 0 0 0</pose-->
+    <origin rpy="0 0 0" xyz="0  0 ${bodylen}"/>
+    <visual>
+      <geometry>
+        <box size="${bodylen*2} 0.05 0.02"/>
+      </geometry>
+      <material name="white"/>
+    </visual>
+    <origin rpy="0 0 0" xyz="0  0 ${bodylen}"/>
+    <collision>
+      <geometry>
+        <box size="${bodylen*2} 0.05 0.02"/>    
+      </geometry>
+    </collision>
+    <mu1 value="0.8"/>
+    <mu2 value="0.8"/>
+    <kp value="1000.0" />
+    <kd value="1.0" />
+    <material>Gazebo/Grey</material>
+    <xacro:default_inertial mass="1"/>
+  </link>
+
+  <!--gazebo reference="base_link">
+      <mu1 value="0.8"/>
+      <mu2 value="0.9"/>
+      <kp value="1000.0" />
+      <kd value="1.0" />
+      <material>Gazebo/Grey</material>
+  </gazebo-->
+
+  <link name="launcher">
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <visual>
+      <geometry>
+        <box size="${bodylen*3} ${bodylen*3} 0.01"/>
+      </geometry>
+      <material name="white"/>
+    </visual>
+    <collision>
+     <origin rpy="0 0 0" xyz="0 0 0"/>
+     <geometry>
+        <box size="${bodylen*3} ${bodylen*3} 0.01"/>    
+      </geometry>
+    </collision>
+    <mu1 value="0.3"/>
+    <mu2 value="0.4"/>
+    <kp value="1000.0" />
+    <kd value="1.0" />
+    <material>Gazebo/Grey</material>
+    <xacro:default_inertial mass="15"/>
+  </link>
+
+  
+    <joint name="launcher_joint" type="revolute">
+      <axis xyz="0 0 0"/>
+      <limit effort="1000.0" lower="0.0" upper="1" velocity="5"/>
+      <origin rpy="0 0 0" xyz="0 0 ${bodylen*3}"/>
+      <!-- origin rpy="0 0 0" xyz="0 0 0"/-->
+ <!--origin rpy="0 0 0" xyz="0 ${bodylen*1.5 +0.025} 0"/-->
+      <parent link="base_link"/>
+      <child link="launcher"/>
+      <limit effort="30" velocity="1.0"/>
+      <dynamics damping="0.0" friction="0.0"/>
+    </joint>
+    
+    <transmission name="launcher_trans">
+      <type>transmission_interface/SimpleTransmission</type>
+      <actuator name="launcher_motor">
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+      <joint name="launcher_joint">
+        <hardwareInterface>PositionJointInterface</hardwareInterface>
+      </joint>
+    </transmission>
+
+
+
+   <link name="stopper">
+    <visual>
+      <geometry>
+        <box size="${bodylen*3} 0.05 0.24"/>
+      </geometry>
+      <material name="white"/>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="${bodylen*3} 0.05 0.24"/>    
+      </geometry>
+    </collision>
+    <mu1 value="0.3"/>
+    <mu2 value="0.4"/>
+    <kp value="1000.0" />
+    <kd value="1.0" />
+    <material>Gazebo/Grey</material>
+    <xacro:default_inertial mass="10"/>
+   </link>
+    
+
+
+    
+   <joint name="stopper_joint" type="prismatic">
+      <axis xyz="0 0 0"/>
+      <limit effort="1000.0" lower="-5" upper="5" velocity="5"/>
+      <origin rpy="0 0 0" xyz="0 ${bodylen*0.5} 0.12"/>
+      <parent link="launcher"/>
+      <child link="stopper"/>
+      <limit effort="30" velocity="1.0"/>
+      <dynamics damping="0.0" friction="0.0"/>
+   </joint>
+  
+   <transmission name="stopper_joint_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <actuator name="stopper_joint_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+    <joint name="stopper_joint">
+      <hardwareInterface>PositionJointInterface</hardwareInterface>
+    </joint>
+  </transmission>
+
+   
+   <link name="picker">
+     <visual>
+       <geometry>
+        <cylinder radius="${wheeldiam/5}" length="${bodylen*3}"/>
+       </geometry>
+       <origin xyz="-0.03 -0.06 0" rpy="0  ${pi/2} 0"/>
+       <material name="blue"/>
+     </visual>
+     <collision>
+      <geometry>
+        <cylinder radius="${wheeldiam/5}" length="${bodylen*3}"/>
+      </geometry>
+      <origin xyz="0 -0.025 0.4" rpy="0 ${pi/2} 0"/>
+     </collision>
+      <xacro:default_inertial mass="1"/>
+   </link>
+    
+   <joint name="picker_joint" type="prismatic">
+      <parent link="stopper"/>
+      <child link="picker"/>
+      <limit effort="1000.0" lower="-5" upper="5" velocity="0.5"/>
+      <!--origin xyz="0 0 0" /-->
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <limit effort="30" velocity="0.2"/>
+      <dynamics damping="0.0" friction="0.0"/>
+      <!--origin xyz="0 0 0" /-->
+   </joint>
+   
+   <transmission name="picker_joint_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <actuator name="picker_joint_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+    <joint name="picker_joint">
+      <hardwareInterface>PositionJointInterface</hardwareInterface>
+    </joint>
+   </transmission>
+
+
+  <link name="pusher">
+     <visual>
+       <geometry>
+        <box size="${bodylen*1.1} 0.02 0.5"/>
+        <!--cylinder radius="${wheeldiam/10}" length="${bodylen*1}"/-->
+       </geometry>
+       <origin xyz="0 0.2 0.125" rpy="0 0 ${pi/2}"/>
+       <material name="blue"/>
+     </visual>
+     <collision>
+      <geometry>
+        <box size="${bodylen*1.1} 0.02 0.5 "/>
+        <!--cylinder radius="${wheeldiam/10}" length="${bodylen*1}"/-->
+      </geometry>
+      <origin xyz="0 0.2 0.125" rpy=" 0 0 ${pi/2}"/>
+     </collision>
+      <xacro:default_inertial mass="2"/>
+   </link>
+    
+   <joint name="pusher_joint" type="revolute">
+      <parent link="picker"/>
+      <child link="pusher"/>
+      <limit effort="1000.0" lower="-5" upper="5" velocity="0.5"/>
+      <!--origin xyz="0 0 0" /-->
+      <origin rpy="0 0 0" xyz="-${bodylen*1.4} 0 0"/>
+      <limit effort="30" velocity="0.2"/>
+      <dynamics damping="0.0" friction="0.0"/>
+      <!--origin xyz="0 0 0" /-->
+   </joint>
+   
+   <transmission name="pusher_joint_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <actuator name="pusher_joint_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+    <joint name="pusher_joint">
+      <hardwareInterface>PositionJointInterface</hardwareInterface>
+    </joint>
+  </transmission>
+ 
+    
+ <!-- Gazebo plugin for ROS Control -->
+  <gazebo>
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+      <robotNamespace>/</robotNamespace>
+    </plugin>
+  </gazebo>
+
+    
+
+
+ 
+</robot>
